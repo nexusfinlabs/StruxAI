@@ -1,0 +1,146 @@
+"use client";
+
+import { LanguageToggle } from "@/components/controls/LanguageToggle";
+import { ThemeToggle } from "@/components/controls/ThemeToggle";
+import { Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+
+const navItems = [
+  { href: "#producto", key: "nav.product" },
+  { href: "#como-funciona", key: "nav.how" },
+  { href: "#casos", key: "nav.cases" },
+  { href: "#integraciones-top", key: "nav.integrations" },
+  { href: "#precios", key: "nav.pricing" },
+  { href: "#recursos", key: "nav.resources" },
+] as const;
+
+function Logo() {
+  return (
+    <a
+      href="#hero"
+      className="group inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-[0.22em] text-slate-900 dark:text-white"
+    >
+      <span>Strux</span>
+      <span className="relative inline-flex h-[1.1em] w-[0.62em] items-center justify-center">
+        <svg
+          className="h-full w-full text-violet-600 transition group-hover:text-cyan-600 dark:text-violet-400 dark:group-hover:text-cyan-400"
+          viewBox="0 0 14 16"
+          fill="none"
+          aria-hidden
+        >
+          <path
+            d="M1 14L7 1L13 14H1Z"
+            stroke="currentColor"
+            strokeWidth="1.3"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </span>
+      <span>I</span>
+    </a>
+  );
+}
+
+export function Navbar() {
+  const { t } = useTranslation("landing");
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const bar =
+    scrolled || open
+      ? "border-slate-200/80 bg-white/85 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/80"
+      : "border-transparent bg-transparent";
+
+  return (
+    <header
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${bar}`}
+    >
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:gap-4 sm:px-6 lg:px-8">
+        <Logo />
+        <nav className="hidden items-center gap-6 text-sm text-slate-600 dark:text-slate-300 lg:flex xl:gap-7">
+          {navItems.map(({ href, key }) => (
+            <a
+              key={href}
+              href={href}
+              className="transition hover:text-slate-900 dark:hover:text-white"
+            >
+              {t(key)}
+            </a>
+          ))}
+        </nav>
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          <ThemeToggle />
+          <LanguageToggle />
+          <a
+            href="#login"
+            className="hidden text-sm text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white md:inline"
+          >
+            {t("nav.login")}
+          </a>
+          <a
+            href="#demo"
+            className="hidden rounded-lg bg-gradient-to-r from-violet-600 to-blue-600 px-3 py-2 text-sm font-medium text-white shadow-[0_0_24px_-4px_rgba(139,92,246,0.55)] transition hover:from-violet-500 hover:to-blue-500 sm:inline-flex"
+          >
+            {t("nav.requestDemo")}
+          </a>
+          <button
+            type="button"
+            className="inline-flex rounded-lg border border-slate-200/90 bg-white/90 p-2 text-slate-800 dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-200 lg:hidden"
+            aria-expanded={open}
+            aria-label={open ? t("nav.closeMenu") : t("nav.openMenu")}
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
+      </div>
+      {open ? (
+        <div className="border-t border-slate-200/80 bg-white/95 px-4 py-4 dark:border-white/10 dark:bg-slate-950/95 lg:hidden">
+          <nav className="flex flex-col gap-2 text-sm text-slate-600 dark:text-slate-300">
+            {navItems.map(({ href, key }) => (
+              <a
+                key={href}
+                href={href}
+                className="rounded-lg px-2 py-2 transition hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-white/5 dark:hover:text-white"
+                onClick={() => setOpen(false)}
+              >
+                {t(key)}
+              </a>
+            ))}
+            <a
+              href="#login"
+              className="rounded-lg px-2 py-2 transition hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-white/5 dark:hover:text-white"
+              onClick={() => setOpen(false)}
+            >
+              {t("nav.login")}
+            </a>
+            <a
+              href="#demo"
+              className="mt-1 inline-flex justify-center rounded-lg bg-gradient-to-r from-violet-600 to-blue-600 px-4 py-2.5 text-sm font-medium text-white"
+              onClick={() => setOpen(false)}
+            >
+              {t("nav.requestDemo")}
+            </a>
+          </nav>
+        </div>
+      ) : null}
+    </header>
+  );
+}

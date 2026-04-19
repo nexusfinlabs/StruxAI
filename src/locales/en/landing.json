@@ -1,0 +1,279 @@
+{
+  "nav": {
+    "product": "Product",
+    "how": "How it works",
+    "cases": "Use cases",
+    "integrations": "Integrations",
+    "pricing": "Pricing",
+    "resources": "Resources",
+    "login": "Log in",
+    "requestDemo": "Request demo",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "controls": {
+    "themeLight": "Light theme",
+    "themeDark": "Dark theme",
+    "language": "Language"
+  },
+  "mailto": {
+    "demoSubject": "STRUXAI demo request",
+    "reportSubject": "STRUXAI report",
+    "contactSubject": "STRUXAI inquiry"
+  },
+  "hero": {
+    "badgeNew": "New",
+    "badgeLine": "AI applied to structural analysis from Revit → FEM",
+    "titleBefore": "Structural analysis",
+    "titleFast": "faster",
+    "titleMid": ".",
+    "titleReliable": "More reliable",
+    "titleAfter": ".",
+    "subtitle": "Automate validations, generate the analytical model, run the analysis, and return traceable results to your BIM workflow.",
+    "ctaDemo": "View demo →",
+    "ctaHow": "How it works",
+    "pill1": "Integrated with Revit API & Dynamo",
+    "pill2": "FEM engines: Robot · ETABS · OpenSees",
+    "pill3": "AI for QA, code checks, and optimization"
+  },
+  "copilot": {
+    "brand": "StruxAI Copilot",
+    "status": "Analysis complete",
+    "revision": "Revision",
+    "elements": "Elements",
+    "time": "Time",
+    "findings": "Findings",
+    "finding1": "Supports consistent with analytical model",
+    "finding2": "Duplicate live load on slab F3",
+    "finding3": "Load combinations per defined criteria",
+    "fullReport": "View full report"
+  },
+  "trust": {
+    "title": "Technology you can trust"
+  },
+  "value": {
+    "eyebrow": "Everything you need",
+    "title": "One platform. The full workflow.",
+    "subtitle": "From the BIM model to the final report—with automation, control, and traceability.",
+    "features": [
+      {
+        "title": "Connect Revit",
+        "desc": "Reads the BIM model, detects changes, and prepares structural information automatically."
+      },
+      {
+        "title": "Analytical model",
+        "desc": "Generates nodes, members, supports, loads, topology, and structural properties."
+      },
+      {
+        "title": "Analyze & design",
+        "desc": "Runs analysis, combines loads, and prepares code-based verifications."
+      },
+      {
+        "title": "AI that understands structures",
+        "desc": "Detects inconsistencies, highlights issues, and helps you review with technical context."
+      },
+      {
+        "title": "Sync results",
+        "desc": "Returns forces, deflected shapes, utilization ratios, and reports to the BIM environment."
+      },
+      {
+        "title": "Automated reports",
+        "desc": "Produces clear deliverables for review, validation, or client presentations."
+      }
+    ]
+  },
+  "process": {
+    "eyebrow": "Automated workflow",
+    "title": "From BIM to results in 5 steps",
+    "steps": [
+      {
+        "title": "Upload or connect Revit",
+        "desc": "Versioning and control of the structural model."
+      },
+      {
+        "title": "AI validation",
+        "desc": "Automated review, QA, and issue detection."
+      },
+      {
+        "title": "FEM model",
+        "desc": "Technical conversion, loads, combinations, and analysis setup."
+      },
+      {
+        "title": "Analysis & design",
+        "desc": "Professional solvers plus engineering rules."
+      },
+      {
+        "title": "Results in your BIM",
+        "desc": "Visualization, reports, traceability, and faster decisions."
+      }
+    ]
+  },
+  "stats": {
+    "s1": "Analysis and review time",
+    "s2": "Errors caught before analysis",
+    "s3": "Traceability across revisions",
+    "s4k": "Integrated",
+    "s4": "Revit · Robot · ETABS · OpenSees · APS"
+  },
+  "capabilities": {
+    "title": "Built for teams that actually analyze structures",
+    "subtitle": "Concrete capabilities for modeling, validating, analyzing, and documenting—without losing the technical thread.",
+    "blocks": [
+      {
+        "title": "Model management",
+        "items": [
+          "Structural BIM ingestion",
+          "Change detection",
+          "Version control",
+          "Analytical model validation"
+        ]
+      },
+      {
+        "title": "FEM preparation",
+        "items": [
+          "Node and member generation",
+          "Structural topology",
+          "Supports and releases",
+          "Materials and sections",
+          "Loads and combinations"
+        ]
+      },
+      {
+        "title": "Results",
+        "items": [
+          "Forces and deflected shapes",
+          "Utilization ratios",
+          "Issues and incidents",
+          "Revision-to-revision comparison"
+        ]
+      },
+      {
+        "title": "Applied AI",
+        "items": [
+          "Intelligent QA",
+          "Inconsistency detection",
+          "Technical change summaries",
+          "Document copilot",
+          "Error prioritization"
+        ]
+      }
+    ]
+  },
+  "showcase": {
+    "title": "A technical cockpit for every revision",
+    "subtitle": "Review forces, deflections, incidents, combinations, and analysis status in one interface.",
+    "nav": [
+      "Projects",
+      "Revit",
+      "AI validation",
+      "Loads",
+      "Combinations",
+      "Analysis",
+      "Results",
+      "Reports"
+    ],
+    "overlay": "3D view · Principal stresses",
+    "summary": "Summary",
+    "elements": "Elements",
+    "combinations": "Combinations",
+    "duration": "Duration",
+    "status": "Status",
+    "done": "Completed",
+    "topAlerts": "Top alerts",
+    "alert1": "Unusual stiffness at joint L4-E",
+    "alert2": "Load consistency · slab F3"
+  },
+  "cases": {
+    "title": "Built for real structures—not pretty demos",
+    "subtitle": "Use cases where automation and technical control make a difference on every delivery.",
+    "items": [
+      {
+        "title": "Concrete buildings",
+        "desc": "Automate BIM-to-analysis handoff, reduce inconsistencies, and speed up reviews."
+      },
+      {
+        "title": "Steel structures",
+        "desc": "Track members, connections, loads, and results with stronger traceability."
+      },
+      {
+        "title": "Project revisions",
+        "desc": "Compare versions, assess change impact, and avoid blind re-analysis."
+      },
+      {
+        "title": "BIM + analysis teams",
+        "desc": "Keep modeling and analysis aligned without endless manual exports."
+      },
+      {
+        "title": "Engineering offices",
+        "desc": "Improve delivery times, standardize reviews, and professionalize the analysis workflow."
+      }
+    ]
+  },
+  "impact": {
+    "title": "Less friction. More technical throughput.",
+    "body": "STRUXAI helps reduce repetitive work, accelerate validations, and maintain traceability between BIM and FEM. AI acts as a copilot: it prioritizes issues, summarizes changes, and keeps the focus on engineering decisions."
+  },
+  "dashboardCta": {
+    "sidebar": ["Projects", "Dashboard", "Model", "Analysis", "Results"],
+    "eyebrow": "For engineers building the future",
+    "title": "Less manual work. Better decisions.",
+    "body": "STRUXAI is the copilot your structural team needed: it unifies model, analysis, and reports without losing technical rigor.",
+    "demo": "Request demo →",
+    "specialist": "Talk to a specialist",
+    "response": "We respond in under 24 hours."
+  },
+  "footer": {
+    "tagline": "AI-powered structural analysis platform connected to Revit, BIM, and FEM.",
+    "trust": "Technology you can trust",
+    "rights": "All rights reserved.",
+    "loginNote": "Client access coming soon",
+    "resourcesNote": "Resources and legal links coming soon.",
+    "columns": [
+      {
+        "title": "Product",
+        "links": [
+          { "label": "Features", "href": "#producto" },
+          { "label": "Integrations", "href": "#integraciones-top" },
+          { "label": "Use cases", "href": "#casos" },
+          { "label": "Pricing", "href": "#precios" }
+        ]
+      },
+      {
+        "title": "Resources",
+        "links": [
+          { "label": "Documentation", "href": "#recursos" },
+          { "label": "Blog", "href": "#recursos" },
+          { "label": "Guides", "href": "#recursos" },
+          { "label": "Contact", "href": "mailto:contacto@nexusfinlabs.com" }
+        ]
+      },
+      {
+        "title": "Company",
+        "links": [
+          { "label": "About", "href": "#recursos" },
+          { "label": "Security", "href": "#recursos" },
+          { "label": "Privacy", "href": "#recursos" },
+          { "label": "Terms", "href": "#recursos" }
+        ]
+      },
+      {
+        "title": "Technical",
+        "links": [
+          { "label": "API", "href": "#recursos" },
+          { "label": "System status", "href": "#recursos" },
+          { "label": "Support", "href": "mailto:contacto@nexusfinlabs.com" },
+          { "label": "Log in", "href": "#login" }
+        ]
+      }
+    ],
+    "brands": [
+      "Autodesk Revit API",
+      "Autodesk Platform Services",
+      "Robot Structural Analysis",
+      "ETABS",
+      "OpenSees",
+      "PostgreSQL",
+      "Python"
+    ]
+  }
+}
