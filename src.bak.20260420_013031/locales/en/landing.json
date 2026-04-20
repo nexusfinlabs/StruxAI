@@ -34,8 +34,7 @@
     "ctaHow": "How it works",
     "pill1": "Integrated with Revit API & Dynamo",
     "pill2": "FEM engines: Robot · ETABS · OpenSees",
-    "pill3": "AI for QA, code checks, and optimization",
-    "ledBy": "A project led by Laura Palacio, Civil Engineer and structural analysis expert"
+    "pill3": "AI for QA, code checks, and optimization"
   },
   "copilot": {
     "brand": "StruxAI Copilot",
@@ -47,7 +46,7 @@
     "finding1": "Supports consistent with analytical model",
     "finding2": "Duplicate live load on slab F3",
     "finding3": "Load combinations per defined criteria",
-    "fullReport": "Request more information"
+    "fullReport": "View full report"
   },
   "trust": {
     "title": "Technology you can trust"
@@ -182,9 +181,7 @@
     "done": "Completed",
     "topAlerts": "Top alerts",
     "alert1": "Unusual stiffness at joint L4-E",
-    "alert2": "Load consistency · slab F3",
-    "state": "State",
-    "completed": "Completed"
+    "alert2": "Load consistency · slab F3"
   },
   "cases": {
     "title": "Built for real structures—not pretty demos",
@@ -217,13 +214,7 @@
     "body": "STRUXAI helps reduce repetitive work, accelerate validations, and maintain traceability between BIM and FEM. AI acts as a copilot: it prioritizes issues, summarizes changes, and keeps the focus on engineering decisions."
   },
   "dashboardCta": {
-    "sidebar": [
-      "Projects",
-      "Dashboard",
-      "Model",
-      "Analysis",
-      "Results"
-    ],
+    "sidebar": ["Projects", "Dashboard", "Model", "Analysis", "Results"],
     "eyebrow": "For engineers building the future",
     "title": "Less manual work. Better decisions.",
     "body": "STRUXAI is the copilot your structural team needed: it unifies model, analysis, and reports without losing technical rigor.",
@@ -241,85 +232,37 @@
       {
         "title": "Product",
         "links": [
-          {
-            "label": "Features",
-            "href": "#producto"
-          },
-          {
-            "label": "Integrations",
-            "href": "#integraciones-top"
-          },
-          {
-            "label": "Use cases",
-            "href": "#casos"
-          },
-          {
-            "label": "Pricing",
-            "href": "#precios"
-          }
+          { "label": "Features", "href": "#producto" },
+          { "label": "Integrations", "href": "#integraciones-top" },
+          { "label": "Use cases", "href": "#casos" },
+          { "label": "Pricing", "href": "#precios" }
         ]
       },
       {
         "title": "Resources",
         "links": [
-          {
-            "label": "Documentation",
-            "href": "#recursos"
-          },
-          {
-            "label": "Blog",
-            "href": "#recursos"
-          },
-          {
-            "label": "Guides",
-            "href": "#recursos"
-          },
-          {
-            "label": "Contact",
-            "href": "mailto:palacio.laura@gmail.com"
-          }
+          { "label": "Documentation", "href": "#recursos" },
+          { "label": "Blog", "href": "#recursos" },
+          { "label": "Guides", "href": "#recursos" },
+          { "label": "Contact", "href": "mailto:contacto@nexusfinlabs.com" }
         ]
       },
       {
         "title": "Company",
         "links": [
-          {
-            "label": "About",
-            "href": "#recursos"
-          },
-          {
-            "label": "Security",
-            "href": "#recursos"
-          },
-          {
-            "label": "Privacy",
-            "href": "#recursos"
-          },
-          {
-            "label": "Terms",
-            "href": "#recursos"
-          }
+          { "label": "About", "href": "#recursos" },
+          { "label": "Security", "href": "#recursos" },
+          { "label": "Privacy", "href": "#recursos" },
+          { "label": "Terms", "href": "#recursos" }
         ]
       },
       {
         "title": "Technical",
         "links": [
-          {
-            "label": "API",
-            "href": "#recursos"
-          },
-          {
-            "label": "System status",
-            "href": "#recursos"
-          },
-          {
-            "label": "Support",
-            "href": "mailto:palacio.laura@gmail.com"
-          },
-          {
-            "label": "Log in",
-            "href": "#login"
-          }
+          { "label": "API", "href": "#recursos" },
+          { "label": "System status", "href": "#recursos" },
+          { "label": "Support", "href": "mailto:contacto@nexusfinlabs.com" },
+          { "label": "Log in", "href": "#login" }
         ]
       }
     ],

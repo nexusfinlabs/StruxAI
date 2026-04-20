@@ -5,17 +5,13 @@ import {
   Cpu,
   LineChart,
   ShieldCheck,
-  UserCheck,
 } from "lucide-react";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ProyectoModal } from "./ProyectoModal";
 
 function BuildingVisual({
   copilot,
-  onOpenProyecto,
+  mailReport,
 }: {
-  onOpenProyecto: () => void;
   copilot: {
     brand: string;
     status: string;
@@ -28,6 +24,7 @@ function BuildingVisual({
     finding3: string;
     fullReport: string;
   };
+  mailReport: string;
 }) {
   return (
     <div className="relative h-[420px] w-full max-w-xl overflow-hidden rounded-2xl border border-slate-200/90 bg-white/70 shadow-sm dark:border-white/10 dark:bg-slate-900/60 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset] sm:h-[480px]">
@@ -117,12 +114,12 @@ function BuildingVisual({
               {copilot.finding3}
             </li>
           </ul>
-          <button
-            onClick={onOpenProyecto}
+          <a
+            href={mailReport}
             className="mt-4 flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-violet-600 to-blue-600 py-2 text-xs font-medium text-white transition hover:from-violet-500 hover:to-blue-500"
           >
             {copilot.fullReport}
-          </button>
+          </a>
         </div>
       </div>
     </div>
@@ -131,9 +128,8 @@ function BuildingVisual({
 
 export function HeroSection() {
   const { t } = useTranslation("landing");
-  const [proyectoOpen, setProyectoOpen] = useState(false);
-  const mailDemo = `mailto:palacio.laura@gmail.com?subject=${encodeURIComponent(t("mailto.demoSubject"))}`;
-  const mailReport = `mailto:palacio.laura@gmail.com?subject=${encodeURIComponent(t("mailto.reportSubject"))}`;
+  const mailDemo = `mailto:contacto@nexusfinlabs.com?subject=${encodeURIComponent(t("mailto.demoSubject"))}`;
+  const mailReport = `mailto:contacto@nexusfinlabs.com?subject=${encodeURIComponent(t("mailto.reportSubject"))}`;
 
   const copilot = {
     brand: t("copilot.brand"),
@@ -179,10 +175,6 @@ export function HeroSection() {
           <p className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-slate-600 dark:text-slate-400 sm:text-lg">
             {t("hero.subtitle")}
           </p>
-          <p className="mt-4 flex items-start gap-2 text-sm text-slate-500 dark:text-slate-400">
-            <UserCheck className="mt-0.5 h-4 w-4 flex-shrink-0 text-violet-500" />
-            <span>{t("hero.ledBy")}</span>
-          </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <a
               href={mailDemo}
@@ -219,14 +211,13 @@ export function HeroSection() {
           </div>
         </div>
         <div className="relative flex justify-center lg:justify-end">
-          <BuildingVisual copilot={copilot} onOpenProyecto={() => setProyectoOpen(true)} />
+          <BuildingVisual copilot={copilot} mailReport={mailReport} />
           <LineChart
             className="pointer-events-none absolute -right-4 top-8 hidden h-16 w-16 text-cyan-600/25 dark:text-cyan-400/30 lg:block"
             aria-hidden
           />
         </div>
       </div>
-      <ProyectoModal open={proyectoOpen} onClose={() => setProyectoOpen(false)} />
     </section>
   );
 }
