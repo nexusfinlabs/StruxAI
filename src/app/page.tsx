@@ -1,5 +1,6 @@
 import { CapabilitiesSection } from "@/components/landing/CapabilitiesSection";
 import { Building3DSection } from "@/components/landing/Building3DSection";
+import { StructuralFEMSection } from "@/components/landing/StructuralFEMSection";
 import { DashboardCta } from "@/components/landing/DashboardCta";
 import { Footer } from "@/components/landing/Footer";
 import { HeroSection } from "@/components/landing/HeroSection";
@@ -19,6 +20,7 @@ export default function Home() {
       <main>
         <HeroSection />
         <Building3DSection />
+        <StructuralFEMSection />
         <TrustBar />
         <ValueGrid />
         <ProcessTimeline />
