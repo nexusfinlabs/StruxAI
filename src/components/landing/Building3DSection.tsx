@@ -146,12 +146,34 @@ function stressColor(s: number): number {
   return (Math.round(r * 255) << 16) | (Math.round(g * 255) << 8) | Math.round(b * 255);
 }
 
-const loadScript = (src: string) =>
+const loadScript = (src: string, expectGlobal?: string) =>
   new Promise<void>((resolve, reject) => {
-    if (document.querySelector('script[src="' + src + '"]')) return resolve();
+    const existing = document.querySelector('script[src="' + src + '"]') as HTMLScriptElement | null;
+    const onReady = () => {
+      if (!expectGlobal) return resolve();
+      let tries = 0;
+      const check = () => {
+        const w = window as any;
+        if (w[expectGlobal] || (expectGlobal === "OrbitControls" && w.THREE && w.THREE.OrbitControls)) {
+          resolve();
+        } else if (tries++ < 50) {
+          setTimeout(check, 40);
+        } else {
+          reject(new Error("timeout waiting for " + expectGlobal));
+        }
+      };
+      check();
+    };
+    if (existing) {
+      if ((existing as any)._loaded) return onReady();
+      existing.addEventListener("load", onReady, { once: true });
+      existing.addEventListener("error", () => reject(new Error("fail " + src)), { once: true });
+      return;
+    }
     const s = document.createElement("script");
     s.src = src;
-    s.onload = () => resolve();
+    s.async = false;
+    s.onload = () => { (s as any)._loaded = true; onReady(); };
     s.onerror = () => reject(new Error("fail " + src));
     document.head.appendChild(s);
   });
@@ -186,8 +208,8 @@ export function Building3DSection() {
     let mounted = true;
 
     (async () => {
-      await loadScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js");
-      await loadScript("https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js");
+      await loadScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js", "THREE");
+      await loadScript("https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js", "OrbitControls");
       if (!mounted) return;
 
       const THREE = (window as any).THREE;
