@@ -1,6 +1,7 @@
 "use client";
 
 import { LanguageToggle } from "@/components/controls/LanguageToggle";
+import { ThemeToggle } from "@/components/controls/ThemeToggle";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -85,7 +86,8 @@ export function Navbar() {
           ))}
         </nav>
         <div className="flex items-center gap-2 sm:gap-2.5">
-<LanguageToggle />
+          <ThemeToggle />
+          <LanguageToggle />
           <a
             href="#login"
             className="hidden text-sm text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white md:inline"

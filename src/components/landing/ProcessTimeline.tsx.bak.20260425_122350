@@ -17,14 +17,12 @@ type Step = {
   color: StepColor;
 };
 
-type Workflow = "bim" | "cad";
-
-const BIM_STEPS: Step[] = [
+const STEPS: Step[] = [
   {
     id: 0,
     code: "01",
-    title: "Sube tu archivo Revit",
-    desc: "Carga tu modelo BIM (.rvt, .rfa, .rte). Lectura via Revit API y deteccion automatica de cambios.",
+    title: "Conecta Revit",
+    desc: "Lectura BIM, deteccion de cambios y preparacion estructural automatica.",
     metric: { value: "4.582", label: "elementos detectados" },
     detail: {
       kpis: [
@@ -34,7 +32,6 @@ const BIM_STEPS: Step[] = [
         { label: "Cambios v11", value: "+128" },
       ],
       messages: [
-        "Subiendo archivo .rvt al servidor...",
         "Conectando Autodesk Revit API...",
         "Detectando deltas respecto a v11...",
         "Modelo BIM cargado correctamente.",
@@ -89,18 +86,18 @@ const BIM_STEPS: Step[] = [
   {
     id: 3,
     code: "04",
-    title: "Calculo y Diseno",
-    desc: "Ejecucion en motor profesional: SAP2000, ETABS, CYPE/CYPECAD, Robot, OpenSees.",
+    title: "Calculo y diseno",
+    desc: "Ejecucion en motor profesional (Robot, ETABS, OpenSees) con verificaciones normativas.",
     metric: { value: "02:18:34", label: "tiempo solver" },
     detail: {
       kpis: [
-        { label: "Solver", value: "SAP2000" },
+        { label: "Solver", value: "Robot" },
         { label: "Iteraciones", value: "8" },
         { label: "Convergencia", value: "OK" },
         { label: "Verificacion", value: "EHE-08" },
       ],
       messages: [
-        "Enviando modelo a SAP2000 / ETABS / CYPECAD...",
+        "Enviando modelo a Robot Structural Analysis...",
         "Analisis estatico lineal completado.",
         "Analisis modal espectral NCSR-02 OK.",
         "Verificando ELU: flexion, cortante, pandeo.",
@@ -112,133 +109,20 @@ const BIM_STEPS: Step[] = [
     id: 4,
     code: "05",
     title: "Resultados en BIM",
-    desc: "Esfuerzos, deformadas y ratios devueltos al BIM. Descarga .DXF y Memoria Tecnica en PDF.",
-    metric: { value: "DXF + PDF", label: "entregables firmados" },
+    desc: "Esfuerzos, deformadas, ratios e informes devueltos al entorno BIM, listos para firma.",
+    metric: { value: "100%", label: "trazabilidad" },
     detail: {
       kpis: [
-        { label: "Memoria PDF", value: "OK" },
-        { label: "Planos DXF", value: "12" },
+        { label: "Informes", value: "PDF + IFC" },
         { label: "Hallazgos", value: "12" },
-        { label: "Firmado", value: "OK" },
+        { label: "Criticos", value: "0" },
+        { label: "Estado", value: "Firmado" },
       ],
       messages: [
-        "Generando memoria de calculo en PDF...",
-        "Exportando planos a .DXF...",
+        "Generando informe PDF tecnico...",
         "Sincronizando resultados a Revit...",
-        "Descarga lista. Trazabilidad completa.",
-      ],
-    },
-    color: "blue",
-  },
-];
-
-const CAD_STEPS: Step[] = [
-  {
-    id: 0,
-    code: "01",
-    title: "Sube tu archivo CAD",
-    desc: "Carga tus planos en formato .dwg o .dxf. Lectura de capas, bloques y geometria 2D.",
-    metric: { value: "8 planos", label: "ficheros detectados" },
-    detail: {
-      kpis: [
-        { label: "Capas", value: "47" },
-        { label: "Bloques", value: "186" },
-        { label: "Plantas", value: "8" },
-        { label: "Escala", value: "1:50" },
-      ],
-      messages: [
-        "Subiendo archivos .dwg / .dxf...",
-        "Parseando capas y bloques CAD...",
-        "Identificando plantas, alzados y secciones...",
-        "Geometria 2D cargada correctamente.",
-      ],
-    },
-    color: "cyan",
-  },
-  {
-    id: 1,
-    code: "02",
-    title: "Validacion IA",
-    desc: "Reconocimiento estructural automatico: pilares, vigas, forjados, muros desde planos 2D.",
-    metric: { value: "1.248", label: "elementos extraidos" },
-    detail: {
-      kpis: [
-        { label: "Pilares", value: "84" },
-        { label: "Vigas", value: "412" },
-        { label: "Forjados", value: "8" },
-        { label: "Muros", value: "32" },
-      ],
-      messages: [
-        "Reconocimiento estructural via IA...",
-        "Extrayendo pilares y vigas de la planta tipo...",
-        "Inferencia de continuidad entre plantas...",
-        "Modelo estructural reconstruido desde CAD.",
-      ],
-    },
-    color: "violet",
-  },
-  {
-    id: 2,
-    code: "03",
-    title: "Modelo FEM",
-    desc: "Generacion del modelo FEM 3D a partir de los elementos detectados en el CAD 2D.",
-    metric: { value: "4.120", label: "nodos generados" },
-    detail: {
-      kpis: [
-        { label: "Nodos", value: "4.120" },
-        { label: "Barras", value: "1.248" },
-        { label: "Apoyos", value: "84" },
-        { label: "Combinaciones", value: "42" },
-      ],
-      messages: [
-        "Reconstruyendo malla 3D desde planos...",
-        "Asignando secciones y materiales por defecto...",
-        "Mapeando cargas reglamentarias...",
-        "Modelo listo para enviar a solver.",
-      ],
-    },
-    color: "amber",
-  },
-  {
-    id: 3,
-    code: "04",
-    title: "Calculo y Diseno",
-    desc: "Ejecucion en motor profesional: SAP2000, ETABS, CYPE/CYPECAD, Robot, OpenSees.",
-    metric: { value: "01:42:15", label: "tiempo solver" },
-    detail: {
-      kpis: [
-        { label: "Solver", value: "CYPECAD" },
-        { label: "Iteraciones", value: "6" },
-        { label: "Convergencia", value: "OK" },
-        { label: "Verificacion", value: "EHE-08" },
-      ],
-      messages: [
-        "Enviando modelo a SAP2000 / ETABS / CYPECAD...",
-        "Analisis estatico lineal completado.",
-        "Analisis modal espectral NCSR-02 OK.",
-        "Verificando ELU: flexion, cortante, pandeo.",
-      ],
-    },
-    color: "emerald",
-  },
-  {
-    id: 4,
-    code: "05",
-    title: "Resultados",
-    desc: "Esfuerzos, deformadas y ratios listos. Descarga .DXF actualizado y Memoria Tecnica en PDF.",
-    metric: { value: "DXF + PDF", label: "entregables firmados" },
-    detail: {
-      kpis: [
-        { label: "Memoria PDF", value: "OK" },
-        { label: "Planos DXF", value: "8" },
-        { label: "Hallazgos", value: "9" },
-        { label: "Firmado", value: "OK" },
-      ],
-      messages: [
-        "Generando memoria de calculo en PDF...",
-        "Exportando planos actualizados a .DXF...",
-        "Marcado de incidencias en planos originales...",
-        "Descarga lista. Trazabilidad completa.",
+        "Memoria de calculo lista para revisor.",
+        "Trazabilidad completa por revision.",
       ],
     },
     color: "blue",
@@ -254,6 +138,7 @@ const COLORS: Record<
     shadow: string;
     dot: string;
     bar: string;
+    glow: string;
   }
 > = {
   cyan: {
@@ -263,6 +148,7 @@ const COLORS: Record<
     shadow: "shadow-[0_0_60px_-10px_rgba(6,182,212,0.55)]",
     dot: "bg-cyan-400",
     bar: "from-cyan-500 to-cyan-300",
+    glow: "rgba(6,182,212,0.55)",
   },
   violet: {
     text: "text-violet-300",
@@ -271,6 +157,7 @@ const COLORS: Record<
     shadow: "shadow-[0_0_60px_-10px_rgba(139,92,246,0.55)]",
     dot: "bg-violet-400",
     bar: "from-violet-500 to-violet-300",
+    glow: "rgba(139,92,246,0.55)",
   },
   amber: {
     text: "text-amber-300",
@@ -279,6 +166,7 @@ const COLORS: Record<
     shadow: "shadow-[0_0_60px_-10px_rgba(245,158,11,0.55)]",
     dot: "bg-amber-400",
     bar: "from-amber-500 to-amber-300",
+    glow: "rgba(245,158,11,0.55)",
   },
   emerald: {
     text: "text-emerald-300",
@@ -287,6 +175,7 @@ const COLORS: Record<
     shadow: "shadow-[0_0_60px_-10px_rgba(16,185,129,0.55)]",
     dot: "bg-emerald-400",
     bar: "from-emerald-500 to-emerald-300",
+    glow: "rgba(16,185,129,0.55)",
   },
   blue: {
     text: "text-blue-300",
@@ -295,6 +184,7 @@ const COLORS: Record<
     shadow: "shadow-[0_0_60px_-10px_rgba(59,130,246,0.55)]",
     dot: "bg-blue-400",
     bar: "from-blue-500 to-blue-300",
+    glow: "rgba(59,130,246,0.55)",
   },
 };
 
@@ -354,50 +244,12 @@ function StepIcon({ id }: { id: number }): ReactNode {
   return null;
 }
 
-function WorkflowIcon({ kind }: { kind: Workflow }) {
-  const props = {
-    width: 18,
-    height: 18,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
-  if (kind === "bim") {
-    return (
-      <svg {...props}>
-        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-        <line x1="12" y1="22.08" x2="12" y2="12" />
-      </svg>
-    );
-  }
-  return (
-    <svg {...props}>
-      <path d="M3 3h18v18H3z" />
-      <path d="M3 9h18M9 3v18" />
-      <circle cx="6" cy="6" r="0.5" fill="currentColor" />
-      <circle cx="15" cy="15" r="0.5" fill="currentColor" />
-    </svg>
-  );
-}
-
 const STEP_DURATION_MS = 3500;
 const TICK_MS = 50;
 
 export function ProcessTimeline() {
-  const [workflow, setWorkflow] = useState<Workflow>("bim");
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
-
-  const STEPS = workflow === "bim" ? BIM_STEPS : CAD_STEPS;
-
-  useEffect(() => {
-    setCurrentStep(0);
-    setProgress(0);
-  }, [workflow]);
 
   useEffect(() => {
     let elapsed = 0;
@@ -408,11 +260,11 @@ export function ProcessTimeline() {
       if (elapsed >= STEP_DURATION_MS) {
         elapsed = 0;
         setProgress(0);
-        setCurrentStep((prev) => (prev + 1) % 5);
+        setCurrentStep((prev) => (prev + 1) % STEPS.length);
       }
     }, TICK_MS);
     return () => clearInterval(timer);
-  }, [workflow]);
+  }, []);
 
   const overallProgress = ((currentStep + progress / 100) / STEPS.length) * 100;
   const cur = STEPS[currentStep];
@@ -430,64 +282,20 @@ export function ProcessTimeline() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(139,92,246,0.10),_transparent_60%)]" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 text-center">
+        <div className="mb-12 text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] text-violet-300">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet-400"></span>
             Pipeline en directo
           </span>
           <h2 className="mt-5 text-3xl font-bold text-white sm:text-4xl md:text-5xl">
-            {workflow === "bim" ? (
-              <>
-                De BIM a resultados{" "}
-                <span className="bg-gradient-to-r from-violet-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                  en 5 pasos
-                </span>
-              </>
-            ) : (
-              <>
-                De CAD a resultados{" "}
-                <span className="bg-gradient-to-r from-amber-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                  en 5 pasos
-                </span>
-              </>
-            )}
+            De BIM a resultados{" "}
+            <span className="bg-gradient-to-r from-violet-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+              en 5 pasos
+            </span>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-slate-400">
-            {workflow === "bim"
-              ? "Mira como el modelo Revit (.rvt, .rfa, .rte) viaja por el agente STRUXAI hasta el .DXF y la Memoria Tecnica firmada."
-              : "Tambien partiendo solo de CAD 2D (.dwg, .dxf), STRUXAI reconoce la estructura, monta el modelo FEM y entrega la Memoria Tecnica."}
+            Mira como el modelo BIM viaja por cada fase del agente STRUXAI hasta el informe firmado.
           </p>
-        </div>
-
-        <div className="mb-10 flex justify-center">
-          <div className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-slate-950/70 p-1 backdrop-blur">
-            <button
-              type="button"
-              onClick={() => setWorkflow("bim")}
-              className={
-                "inline-flex items-center gap-2 rounded-full px-4 py-2 font-mono text-[11px] uppercase tracking-widest transition " +
-                (workflow === "bim"
-                  ? "bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-[0_0_24px_-4px_rgba(139,92,246,0.55)]"
-                  : "text-slate-400 hover:text-white")
-              }
-            >
-              <WorkflowIcon kind="bim" />
-              .RVT - Workflow BIM
-            </button>
-            <button
-              type="button"
-              onClick={() => setWorkflow("cad")}
-              className={
-                "inline-flex items-center gap-2 rounded-full px-4 py-2 font-mono text-[11px] uppercase tracking-widest transition " +
-                (workflow === "cad"
-                  ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-[0_0_24px_-4px_rgba(245,158,11,0.55)]"
-                  : "text-slate-400 hover:text-white")
-              }
-            >
-              <WorkflowIcon kind="cad" />
-              .CAD - Workflow CAD
-            </button>
-          </div>
         </div>
 
         <div className="mx-auto mb-10 max-w-3xl">
@@ -650,7 +458,7 @@ export function ProcessTimeline() {
               </div>
               <div className="min-w-0">
                 <div className="font-mono text-[9px] uppercase tracking-widest text-slate-500">
-                  Step {cur.code} - en directo - {workflow === "bim" ? "Workflow BIM" : "Workflow CAD"}
+                  Step {cur.code} - en directo
                 </div>
                 <h4 className="truncate text-lg font-bold text-white">{cur.title}</h4>
               </div>
