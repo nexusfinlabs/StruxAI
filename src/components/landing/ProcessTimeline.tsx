@@ -1,68 +1,534 @@
 "use client";
 
-import { useTranslation } from "react-i18next";
+import { useEffect, useState, type ReactNode } from "react";
 
-const nums = ["01", "02", "03", "04", "05"] as const;
+type StepColor = "cyan" | "violet" | "amber" | "emerald" | "blue";
+
+type Step = {
+  id: number;
+  code: string;
+  title: string;
+  desc: string;
+  metric: { value: string; label: string };
+  detail: {
+    kpis: Array<{ label: string; value: string }>;
+    messages: string[];
+  };
+  color: StepColor;
+};
+
+const STEPS: Step[] = [
+  {
+    id: 0,
+    code: "01",
+    title: "Conecta Revit",
+    desc: "Lectura BIM, deteccion de cambios y preparacion estructural automatica.",
+    metric: { value: "4.582", label: "elementos detectados" },
+    detail: {
+      kpis: [
+        { label: "Familias", value: "342" },
+        { label: "Niveles", value: "12" },
+        { label: "Version", value: "v12" },
+        { label: "Cambios v11", value: "+128" },
+      ],
+      messages: [
+        "Conectando Autodesk Revit API...",
+        "Detectando deltas respecto a v11...",
+        "Modelo BIM cargado correctamente.",
+      ],
+    },
+    color: "cyan",
+  },
+  {
+    id: 1,
+    code: "02",
+    title: "Validacion IA",
+    desc: "Revision automatica del modelo, QA y deteccion de incidencias antes del calculo.",
+    metric: { value: "12", label: "incidencias detectadas" },
+    detail: {
+      kpis: [
+        { label: "Criticas", value: "3" },
+        { label: "Mayores", value: "5" },
+        { label: "Menores", value: "4" },
+        { label: "Tiempo", value: "0:23" },
+      ],
+      messages: [
+        "Comprobando coherencia analytical model...",
+        "Validando cargas y combinaciones...",
+        "Forjado F3: carga viva duplicada detectada.",
+        "Apoyos coherentes con modelo BIM.",
+      ],
+    },
+    color: "violet",
+  },
+  {
+    id: 2,
+    code: "03",
+    title: "Modelo FEM",
+    desc: "Conversion tecnica a nodos, barras, apoyos, cargas y combinaciones de calculo.",
+    metric: { value: "6.842", label: "nodos generados" },
+    detail: {
+      kpis: [
+        { label: "Nodos", value: "6.842" },
+        { label: "Barras", value: "4.582" },
+        { label: "Apoyos", value: "78" },
+        { label: "Combinaciones", value: "42" },
+      ],
+      messages: [
+        "Generando malla FEM...",
+        "Mapeando cargas a nodos...",
+        "42 combinaciones preparadas (G+Q+W+S).",
+        "Modelo listo para enviar a solver.",
+      ],
+    },
+    color: "amber",
+  },
+  {
+    id: 3,
+    code: "04",
+    title: "Calculo y diseno",
+    desc: "Ejecucion en motor profesional (Robot, ETABS, OpenSees) con verificaciones normativas.",
+    metric: { value: "02:18:34", label: "tiempo solver" },
+    detail: {
+      kpis: [
+        { label: "Solver", value: "Robot" },
+        { label: "Iteraciones", value: "8" },
+        { label: "Convergencia", value: "OK" },
+        { label: "Verificacion", value: "EHE-08" },
+      ],
+      messages: [
+        "Enviando modelo a Robot Structural Analysis...",
+        "Analisis estatico lineal completado.",
+        "Analisis modal espectral NCSR-02 OK.",
+        "Verificando ELU: flexion, cortante, pandeo.",
+      ],
+    },
+    color: "emerald",
+  },
+  {
+    id: 4,
+    code: "05",
+    title: "Resultados en BIM",
+    desc: "Esfuerzos, deformadas, ratios e informes devueltos al entorno BIM, listos para firma.",
+    metric: { value: "100%", label: "trazabilidad" },
+    detail: {
+      kpis: [
+        { label: "Informes", value: "PDF + IFC" },
+        { label: "Hallazgos", value: "12" },
+        { label: "Criticos", value: "0" },
+        { label: "Estado", value: "Firmado" },
+      ],
+      messages: [
+        "Generando informe PDF tecnico...",
+        "Sincronizando resultados a Revit...",
+        "Memoria de calculo lista para revisor.",
+        "Trazabilidad completa por revision.",
+      ],
+    },
+    color: "blue",
+  },
+];
+
+const COLORS: Record<
+  StepColor,
+  {
+    text: string;
+    border: string;
+    bg: string;
+    shadow: string;
+    dot: string;
+    bar: string;
+    glow: string;
+  }
+> = {
+  cyan: {
+    text: "text-cyan-300",
+    border: "border-cyan-500/40",
+    bg: "bg-cyan-500/10",
+    shadow: "shadow-[0_0_60px_-10px_rgba(6,182,212,0.55)]",
+    dot: "bg-cyan-400",
+    bar: "from-cyan-500 to-cyan-300",
+    glow: "rgba(6,182,212,0.55)",
+  },
+  violet: {
+    text: "text-violet-300",
+    border: "border-violet-500/40",
+    bg: "bg-violet-500/10",
+    shadow: "shadow-[0_0_60px_-10px_rgba(139,92,246,0.55)]",
+    dot: "bg-violet-400",
+    bar: "from-violet-500 to-violet-300",
+    glow: "rgba(139,92,246,0.55)",
+  },
+  amber: {
+    text: "text-amber-300",
+    border: "border-amber-500/40",
+    bg: "bg-amber-500/10",
+    shadow: "shadow-[0_0_60px_-10px_rgba(245,158,11,0.55)]",
+    dot: "bg-amber-400",
+    bar: "from-amber-500 to-amber-300",
+    glow: "rgba(245,158,11,0.55)",
+  },
+  emerald: {
+    text: "text-emerald-300",
+    border: "border-emerald-500/40",
+    bg: "bg-emerald-500/10",
+    shadow: "shadow-[0_0_60px_-10px_rgba(16,185,129,0.55)]",
+    dot: "bg-emerald-400",
+    bar: "from-emerald-500 to-emerald-300",
+    glow: "rgba(16,185,129,0.55)",
+  },
+  blue: {
+    text: "text-blue-300",
+    border: "border-blue-500/40",
+    bg: "bg-blue-500/10",
+    shadow: "shadow-[0_0_60px_-10px_rgba(59,130,246,0.55)]",
+    dot: "bg-blue-400",
+    bar: "from-blue-500 to-blue-300",
+    glow: "rgba(59,130,246,0.55)",
+  },
+};
+
+function StepIcon({ id }: { id: number }): ReactNode {
+  const props = {
+    width: 26,
+    height: 26,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.7,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
+  switch (id) {
+    case 0:
+      return (
+        <svg {...props}>
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+          <line x1="12" y1="22.08" x2="12" y2="12" />
+        </svg>
+      );
+    case 1:
+      return (
+        <svg {...props}>
+          <path d="M12 3l1.4 4.2L18 8l-3.6 2.6 1.3 4.4L12 12.5 8.3 15l1.3-4.4L6 8l4.6-.8z" />
+          <circle cx="6" cy="18" r="1.3" />
+          <circle cx="18" cy="18" r="1.3" />
+          <path d="M6 18h12" />
+        </svg>
+      );
+    case 2:
+      return (
+        <svg {...props}>
+          <path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z" />
+          <path d="M10 6.5h4M10 17.5h4M6.5 10v4M17.5 10v4" />
+        </svg>
+      );
+    case 3:
+      return (
+        <svg {...props}>
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+        </svg>
+      );
+    case 4:
+      return (
+        <svg {...props}>
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="9" y1="13" x2="9" y2="17" />
+          <line x1="12" y1="11" x2="12" y2="17" />
+          <line x1="15" y1="15" x2="15" y2="17" />
+        </svg>
+      );
+  }
+  return null;
+}
+
+const STEP_DURATION_MS = 3500;
+const TICK_MS = 50;
 
 export function ProcessTimeline() {
-  const { t } = useTranslation("landing");
-  const steps = t("process.steps", { returnObjects: true }) as {
-    title: string;
-    desc: string;
-  }[];
+  const [currentStep, setCurrentStep] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    let elapsed = 0;
+    const timer = setInterval(() => {
+      elapsed += TICK_MS;
+      const pct = Math.min(100, (elapsed / STEP_DURATION_MS) * 100);
+      setProgress(pct);
+      if (elapsed >= STEP_DURATION_MS) {
+        elapsed = 0;
+        setProgress(0);
+        setCurrentStep((prev) => (prev + 1) % STEPS.length);
+      }
+    }, TICK_MS);
+    return () => clearInterval(timer);
+  }, []);
+
+  const overallProgress = ((currentStep + progress / 100) / STEPS.length) * 100;
+  const cur = STEPS[currentStep];
+  const curC = COLORS[cur.color];
+  const curMessageIdx = Math.min(
+    cur.detail.messages.length - 1,
+    Math.floor((progress / 100) * cur.detail.messages.length)
+  );
 
   return (
     <section
       id="como-funciona"
-      className="border-t border-slate-200/80 py-20 dark:border-white/5 sm:py-24"
+      className="relative overflow-hidden border-b border-white/5 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 py-20 sm:py-24"
     >
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <p className="text-center text-xs font-semibold uppercase tracking-[0.25em] text-violet-600 dark:text-violet-400">
-          {t("process.eyebrow")}
-        </p>
-        <h2 className="mx-auto mt-3 max-w-3xl text-center text-3xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-          {t("process.title")}
-        </h2>
-        <div className="mt-16">
-          <div className="relative hidden lg:block">
-            <div className="absolute left-0 right-0 top-7 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-white/15" />
-            <div className="grid grid-cols-5 gap-4">
-              {steps.map((s, i) => (
-                <div key={nums[i]} className="relative text-center">
-                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-violet-300/80 bg-white text-sm font-mono font-semibold text-violet-800 shadow-sm dark:border-violet-500/40 dark:bg-slate-950 dark:text-violet-200 dark:shadow-[0_0_24px_-8px_rgba(139,92,246,0.8)]">
-                    {nums[i]}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(139,92,246,0.10),_transparent_60%)]" />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-12 text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] text-violet-300">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet-400"></span>
+            Pipeline en directo
+          </span>
+          <h2 className="mt-5 text-3xl font-bold text-white sm:text-4xl md:text-5xl">
+            De BIM a resultados{" "}
+            <span className="bg-gradient-to-r from-violet-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+              en 5 pasos
+            </span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-slate-400">
+            Mira como el modelo BIM viaja por cada fase del agente STRUXAI hasta el informe firmado.
+          </p>
+        </div>
+
+        <div className="mx-auto mb-10 max-w-3xl">
+          <div className="mb-2 flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-slate-500">
+            <span>Pipeline progress</span>
+            <span className={curC.text}>
+              Paso {String(currentStep + 1).padStart(2, "0")} / 05
+            </span>
+          </div>
+          <div className="relative h-1.5 overflow-hidden rounded-full bg-white/5">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-violet-500 via-cyan-400 to-emerald-400 transition-[width] duration-100 ease-linear"
+              style={{ width: overallProgress + "%" }}
+            />
+            <div
+              className="absolute top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,0.9)] transition-[left] duration-100 ease-linear"
+              style={{ left: `calc(${overallProgress}% - 6px)` }}
+            />
+          </div>
+        </div>
+
+        <div className="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
+          {STEPS.map((step, i) => {
+            const c = COLORS[step.color];
+            const isActive = i === currentStep;
+            const isDone = i < currentStep;
+            const stateLabel = isActive ? "RUNNING" : isDone ? "DONE" : "QUEUED";
+            const stateColor = isActive
+              ? c.text
+              : isDone
+              ? "text-emerald-300"
+              : "text-slate-600";
+
+            return (
+              <div key={step.id} className="relative">
+                {i < STEPS.length - 1 && (
+                  <div
+                    className="pointer-events-none absolute left-full top-1/2 z-10 hidden h-0.5 w-3 -translate-x-2 -translate-y-1/2 lg:block"
+                    aria-hidden
+                  >
+                    <div className="relative h-full w-full bg-white/10">
+                      <div
+                        className={"absolute inset-y-0 left-0 bg-gradient-to-r " + c.bar}
+                        style={{
+                          width: isDone ? "100%" : isActive ? progress + "%" : "0%",
+                          transition: "width 100ms linear",
+                        }}
+                      />
+                    </div>
                   </div>
-                  <h3 className="mt-5 text-sm font-semibold text-slate-900 dark:text-white">
-                    {s.title}
+                )}
+
+                <div
+                  className={
+                    "relative flex h-full flex-col rounded-2xl border bg-slate-950/60 p-5 transition-all duration-300 " +
+                    (isActive
+                      ? c.border + " " + c.shadow + " sm:scale-[1.02]"
+                      : isDone
+                      ? "border-emerald-500/20 bg-emerald-950/10"
+                      : "border-white/5 opacity-50")
+                  }
+                >
+                  <div className="mb-3 flex items-center justify-between">
+                    <div
+                      className={
+                        "flex items-center font-mono text-[9px] font-bold uppercase tracking-widest " +
+                        stateColor
+                      }
+                    >
+                      {isActive && (
+                        <span
+                          className={"mr-1.5 inline-block h-1.5 w-1.5 animate-pulse rounded-full " + c.dot}
+                        />
+                      )}
+                      {isDone && <span className="mr-1.5">OK</span>}
+                      {stateLabel}
+                    </div>
+                    <span
+                      className={
+                        "font-mono text-2xl font-bold tracking-tight " +
+                        (isActive ? c.text : isDone ? "text-emerald-500/40" : "text-slate-700")
+                      }
+                    >
+                      {step.code}
+                    </span>
+                  </div>
+
+                  <div
+                    className={
+                      "mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl border " +
+                      (isActive
+                        ? c.border + " " + c.bg + " " + c.text
+                        : isDone
+                        ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                        : "border-white/5 bg-white/[0.02] text-slate-600")
+                    }
+                  >
+                    <StepIcon id={step.id} />
+                  </div>
+
+                  <h3
+                    className={
+                      "mb-2 text-sm font-semibold " +
+                      (isActive ? "text-white" : isDone ? "text-slate-200" : "text-slate-500")
+                    }
+                  >
+                    {step.title}
                   </h3>
-                  <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-500">
-                    {s.desc}
+                  <p
+                    className={
+                      "flex-1 text-xs leading-relaxed " +
+                      (isActive ? "text-slate-300" : "text-slate-600")
+                    }
+                  >
+                    {step.desc}
                   </p>
+
+                  {(isActive || isDone) && (
+                    <div className="mt-4 rounded-lg border border-white/5 bg-white/[0.02] p-2.5">
+                      <div
+                        className={
+                          "font-mono text-base font-bold " +
+                          (isActive ? c.text : "text-emerald-300")
+                        }
+                      >
+                        {step.metric.value}
+                      </div>
+                      <div className="font-mono text-[9px] uppercase tracking-widest text-slate-500">
+                        {step.metric.label}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              ))}
+              </div>
+            );
+          })}
+        </div>
+
+        <div
+          className={
+            "relative mx-auto max-w-5xl rounded-2xl border bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-5 transition-all duration-500 sm:p-7 " +
+            curC.border +
+            " " +
+            curC.shadow
+          }
+        >
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div
+                className={
+                  "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border " +
+                  curC.border +
+                  " " +
+                  curC.bg +
+                  " " +
+                  curC.text
+                }
+              >
+                <StepIcon id={cur.id} />
+              </div>
+              <div className="min-w-0">
+                <div className="font-mono text-[9px] uppercase tracking-widest text-slate-500">
+                  Step {cur.code} - en directo
+                </div>
+                <h4 className="truncate text-lg font-bold text-white">{cur.title}</h4>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 font-mono text-[10px]">
+              <span className={"h-1.5 w-1.5 animate-pulse rounded-full " + curC.dot} />
+              <span className={curC.text}>RUNNING</span>
             </div>
           </div>
-          <div className="space-y-6 lg:hidden">
-            {steps.map((s, i) => (
-              <div key={nums[i]} className="flex gap-4">
-                <div className="flex flex-col items-center">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-violet-300/80 bg-white text-xs font-mono font-semibold text-violet-800 dark:border-violet-500/40 dark:bg-slate-950 dark:text-violet-200">
-                    {nums[i]}
-                  </div>
-                  {i < steps.length - 1 ? (
-                    <div className="mt-1 w-px flex-1 bg-gradient-to-b from-violet-400/50 to-transparent dark:from-violet-500/40" />
-                  ) : null}
+
+          <div className="mb-5 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+            {cur.detail.kpis.map((kpi, i) => (
+              <div
+                key={i}
+                className="rounded-lg border border-white/5 bg-white/[0.02] p-3"
+              >
+                <div className="font-mono text-[9px] uppercase tracking-widest text-slate-500">
+                  {kpi.label}
                 </div>
-                <div className="pb-2">
-                  <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
-                    {s.title}
-                  </h3>
-                  <p className="mt-1 text-xs text-slate-600 dark:text-slate-500">
-                    {s.desc}
-                  </p>
+                <div className={"mt-1 font-mono text-base font-bold " + curC.text}>
+                  {kpi.value}
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className="mb-4">
+            <div className="mb-1.5 flex items-center justify-between">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+                Progreso de este paso
+              </span>
+              <span className={"font-mono text-[10px] " + curC.text}>
+                {Math.round(progress)}%
+              </span>
+            </div>
+            <div className="h-1 overflow-hidden rounded-full bg-white/5">
+              <div
+                className={
+                  "h-full rounded-full bg-gradient-to-r " +
+                  curC.bar +
+                  " transition-[width] duration-100 ease-linear"
+                }
+                style={{ width: progress + "%" }}
+              />
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-white/5 bg-slate-950/60 p-3 font-mono text-[10px]">
+            <div className="mb-2 flex items-center gap-2 font-mono text-[9px] uppercase tracking-widest text-slate-500">
+              <span className="inline-flex h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-400" />
+              Console
+            </div>
+            <div className="max-h-28 space-y-1 overflow-hidden">
+              {cur.detail.messages.slice(0, curMessageIdx + 1).map((m, i) => (
+                <div
+                  key={i}
+                  className={i === curMessageIdx ? "text-white" : "text-slate-500"}
+                >
+                  <span
+                    className={
+                      "mr-2 " +
+                      (i === curMessageIdx ? curC.text : "text-emerald-400/60")
+                    }
+                  >
+                    {i === curMessageIdx ? ">" : "+"}
+                  </span>
+                  {m}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
