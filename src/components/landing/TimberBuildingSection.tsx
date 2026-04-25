@@ -29,7 +29,7 @@ const ELEMENTS: SustainElement[] = [
     ],
     norms: [
       { code: "CTE DB-SE-M", label: "Calculo estructural madera (obligatorio ES)", status: "ok" },
-      { code: "Eurocodigo 5", label: "Diseno estructural avanzado CLT", status: "ok" },
+      { code: "Eurocodigo 5", label: "Diseño estructural avanzado CLT", status: "ok" },
       { code: "UNE-EN 16351", label: "Marcado CE paneles CLT", status: "ok" },
       { code: "UNE-EN 14081", label: "Marcado CE madera estructural", status: "ok" },
       { code: "CTE DB-SI 6", label: "Resistencia al fuego R90", status: "ok" },

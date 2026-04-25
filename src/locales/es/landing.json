@@ -209,12 +209,12 @@
       {
         "title": "Oficinas técnicas",
         "desc": "Mejora tiempos de entrega, estandariza revisiones y profesionaliza el flujo de cálculo."
+      },
+      {
+        "title": "Ingenieros + Arquitectos",
+        "desc": "Nuestro equipo ha construido STRUXAI con amplia experiencia en estructuras residenciales y cumplimiento normativo."
       }
     ]
-  },
-  "impact": {
-    "title": "Menos fricción. Más rendimiento técnico.",
-    "body": "STRUXAI ayuda a reducir trabajo repetitivo, acelerar validaciones y mantener trazabilidad entre BIM y FEM. La IA actúa como copiloto: prioriza incidencias, resume cambios y mantiene el foco en decisiones de ingeniería."
   },
   "dashboardCta": {
     "sidebar": [

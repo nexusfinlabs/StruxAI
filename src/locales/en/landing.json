@@ -209,12 +209,12 @@
       {
         "title": "Engineering offices",
         "desc": "Improve delivery times, standardize reviews, and professionalize the analysis workflow."
+      },
+      {
+        "title": "Engineers + Architects",
+        "desc": "Our team has built STRUXAI with strong experience in residential structures and building compliance."
       }
     ]
-  },
-  "impact": {
-    "title": "Less friction. More technical throughput.",
-    "body": "STRUXAI helps reduce repetitive work, accelerate validations, and maintain traceability between BIM and FEM. AI acts as a copilot: it prioritizes issues, summarizes changes, and keeps the focus on engineering decisions."
   },
   "dashboardCta": {
     "sidebar": [

@@ -56,7 +56,7 @@ const CASES: CaseDef[] = [
   {
     id: "industrial",
     title: "Nave industrial",
-    subtitle: "Porticos de acero con cargas de grua puente. Diseno sismico industrial chileno.",
+    subtitle: "Porticos de acero con cargas de grua puente. Diseño sismico industrial chileno.",
     tag: "Acero industrial",
     badge: "AISC 360 + NCh 2369",
     status: "soon",

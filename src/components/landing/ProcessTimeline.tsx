@@ -89,7 +89,7 @@ const BIM_STEPS: Step[] = [
   {
     id: 3,
     code: "04",
-    title: "Calculo y Diseno",
+    title: "Calculo y Diseño",
     desc: "Ejecucion en motor profesional: SAP2000, ETABS, CYPE/CYPECAD, Robot, OpenSees.",
     metric: { value: "02:18:34", label: "tiempo solver" },
     detail: {
@@ -202,7 +202,7 @@ const CAD_STEPS: Step[] = [
   {
     id: 3,
     code: "04",
-    title: "Calculo y Diseno",
+    title: "Calculo y Diseño",
     desc: "Ejecucion en motor profesional: SAP2000, ETABS, CYPE/CYPECAD, Robot, OpenSees.",
     metric: { value: "01:42:15", label: "tiempo solver" },
     detail: {
