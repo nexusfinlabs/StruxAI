@@ -136,6 +136,16 @@ const FLOORS: FloorData[] = [
 
 const STATUS_COLOR = { ok: 0x06b6d4, warn: 0xf59e0b, crit: 0xef4444 };
 
+function stressColor(s: number): number {
+  const t = Math.max(0, Math.min(1, s));
+  let r = 0, g = 0, b = 0;
+  if (t < 0.25) { r = 0; g = 4 * t; b = 1; }
+  else if (t < 0.5) { r = 0; g = 1; b = 1 - 4 * (t - 0.25); }
+  else if (t < 0.75) { r = 4 * (t - 0.5); g = 1; b = 0; }
+  else { r = 1; g = 1 - 4 * (t - 0.75); b = 0; }
+  return (Math.round(r * 255) << 16) | (Math.round(g * 255) << 8) | Math.round(b * 255);
+}
+
 const loadScript = (src: string) =>
   new Promise<void>((resolve, reject) => {
     if (document.querySelector('script[src="' + src + '"]')) return resolve();
@@ -169,6 +179,7 @@ export function Building3DSection() {
   const [selected, setSelected] = useState<FloorData | null>(null);
   const [hover, setHover] = useState<number | null>(null);
   const [ready, setReady] = useState(false);
+  const [viewMode, setViewMode] = useState<"arq" | "fem">("arq");
 
   useEffect(() => {
     let frameId = 0;
@@ -191,7 +202,7 @@ export function Building3DSection() {
       renderer.setSize(W, H);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.18;
+      renderer.toneMappingExposure = 1.15;
 
       const scene = new THREE.Scene();
       scene.fog = new THREE.Fog(0x050814, 45, 120);
@@ -223,7 +234,7 @@ export function Building3DSection() {
       rim.position.set(0, 8, 32);
       scene.add(rim);
 
-      const slabMat = new THREE.MeshPhysicalMaterial({
+      const slabMatArq = new THREE.MeshPhysicalMaterial({
         color: 0xf2efe6,
         metalness: 0.06,
         roughness: 0.42,
@@ -263,14 +274,18 @@ export function Building3DSection() {
       const SLAB_H = 0.22;
       const hitboxes: any[] = [];
       const highlightMap: Record<number, any> = {};
+      const slabsByFloor: Record<number, any[]> = {};
+      const femBarsByFloor: Record<number, any> = {};
       let yCursor = 0;
 
       FLOORS.forEach((floor) => {
         const FLOOR_H = floor.h;
         const fgroup = new THREE.Group();
         const color = STATUS_COLOR[floor.status];
+        const femC = stressColor(floor.utilization / 100);
 
-        // Losa blanca (banda horizontal continua)
+        slabsByFloor[floor.id] = [];
+
         const slabShape = roundedRect(THREE, floor.w, floor.d, 0.5);
         const slabGeo = new THREE.ExtrudeGeometry(slabShape, {
           depth: SLAB_H,
@@ -280,11 +295,23 @@ export function Building3DSection() {
           bevelSegments: 3,
         });
         slabGeo.rotateX(-Math.PI / 2);
-        const slab = new THREE.Mesh(slabGeo, slabMat);
-        slab.position.set(floor.ox, yCursor, floor.oz);
-        fgroup.add(slab);
 
-        // Core oscuro retranqueado
+        const slabMatFem = new THREE.MeshPhysicalMaterial({
+          color: femC,
+          metalness: 0.1,
+          roughness: 0.55,
+          clearcoat: 0.2,
+          emissive: femC,
+          emissiveIntensity: 0.18,
+        });
+
+        const slab = new THREE.Mesh(slabGeo, slabMatArq);
+        slab.position.set(floor.ox, yCursor, floor.oz);
+        slab.userData.matArq = slabMatArq;
+        slab.userData.matFem = slabMatFem;
+        fgroup.add(slab);
+        slabsByFloor[floor.id].push(slab);
+
         const insetBase = floor.id === 0 ? 1.4 : 0.8;
         const coreW = Math.max(floor.w - insetBase, 1.2);
         const coreD = Math.max(floor.d - insetBase, 1.0);
@@ -299,63 +326,78 @@ export function Building3DSection() {
         core.position.set(floor.ox, yCursor + SLAB_H, floor.oz);
         fgroup.add(core);
 
-        // Banda horizontal continua de ventanas (fachada frontal + trasera)
         const bandH = coreH * 0.78;
         const bandY = yCursor + SLAB_H + coreH / 2;
         const bandW = coreW - 0.15;
         const bandD = coreD - 0.15;
 
-        // Frontal
-        const bandFront = new THREE.Mesh(
-          new THREE.PlaneGeometry(bandW, bandH),
-          windowBandMat
-        );
+        const bandFront = new THREE.Mesh(new THREE.PlaneGeometry(bandW, bandH), windowBandMat);
         bandFront.position.set(floor.ox, bandY, floor.oz + coreD / 2 + 0.008);
         fgroup.add(bandFront);
 
-        // Trasera
-        const bandBack = new THREE.Mesh(
-          new THREE.PlaneGeometry(bandW, bandH),
-          windowBandMat
-        );
+        const bandBack = new THREE.Mesh(new THREE.PlaneGeometry(bandW, bandH), windowBandMat);
         bandBack.position.set(floor.ox, bandY, floor.oz - coreD / 2 - 0.008);
         bandBack.rotation.y = Math.PI;
         fgroup.add(bandBack);
 
-        // Laterales
-        const bandLeft = new THREE.Mesh(
-          new THREE.PlaneGeometry(bandD, bandH),
-          windowBandMat
-        );
+        const bandLeft = new THREE.Mesh(new THREE.PlaneGeometry(bandD, bandH), windowBandMat);
         bandLeft.position.set(floor.ox - coreW / 2 - 0.008, bandY, floor.oz);
         bandLeft.rotation.y = Math.PI / 2;
         fgroup.add(bandLeft);
 
-        const bandRight = new THREE.Mesh(
-          new THREE.PlaneGeometry(bandD, bandH),
-          windowBandMat
-        );
+        const bandRight = new THREE.Mesh(new THREE.PlaneGeometry(bandD, bandH), windowBandMat);
         bandRight.position.set(floor.ox + coreW / 2 + 0.008, bandY, floor.oz);
         bandRight.rotation.y = -Math.PI / 2;
         fgroup.add(bandRight);
 
-        // Acento coloreado (estado de la planta) - pequeno cuadrado en fachada
         const accentSize = Math.min(bandH * 0.6, 0.55);
-        const accentGeo = new THREE.PlaneGeometry(accentSize * 1.4, accentSize);
-        const accentMat = new THREE.MeshBasicMaterial({
+        const accentGeoA = new THREE.PlaneGeometry(accentSize * 1.4, accentSize);
+        const accentMatArq = new THREE.MeshBasicMaterial({
           color,
           transparent: true,
           opacity: floor.status === "ok" ? 0.4 : 0.75,
         });
-        const accent = new THREE.Mesh(accentGeo, accentMat);
-        accent.position.set(
-          floor.ox + coreW * 0.28,
-          bandY,
-          floor.oz + coreD / 2 + 0.014
-        );
-        fgroup.add(accent);
+        const accentArq = new THREE.Mesh(accentGeoA, accentMatArq);
+        accentArq.position.set(floor.ox + coreW * 0.28, bandY, floor.oz + coreD / 2 + 0.014);
+        fgroup.add(accentArq);
+        slabsByFloor[floor.id].push(accentArq);
+        accentArq.userData.isAccentArq = true;
 
-        // Barandilla vidrio (solo frente y laterales, no atras porque es la parte "recta")
+        const canvasBar = document.createElement("canvas");
+        canvasBar.width = 128;
+        canvasBar.height = 16;
+        const ctx = canvasBar.getContext("2d")!;
+        const grad = ctx.createLinearGradient(0, 0, 128, 0);
+        const stops = 8;
+        for (let i = 0; i <= stops; i++) {
+          const t = (i / stops) * (floor.utilization / 100);
+          const c = stressColor(t);
+          const hex = "#" + c.toString(16).padStart(6, "0");
+          grad.addColorStop(i / stops, hex);
+        }
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 128, 16);
+        ctx.fillStyle = "rgba(255,255,255,0.85)";
+        ctx.font = "bold 11px monospace";
+        ctx.textAlign = "right";
+        ctx.fillText(floor.utilization + "%", 124, 12);
+
+        const tex = new THREE.CanvasTexture(canvasBar);
+        tex.needsUpdate = true;
+        const femBarMat = new THREE.MeshBasicMaterial({
+          map: tex,
+          transparent: true,
+          opacity: 0.95,
+        });
+        const femBarW = Math.min(coreW * 0.85, 3.5);
+        const femBarH = 0.32;
+        const femBar = new THREE.Mesh(new THREE.PlaneGeometry(femBarW, femBarH), femBarMat);
+        femBar.position.set(floor.ox, yCursor + SLAB_H + 0.03, floor.oz + coreD / 2 + 0.05);
+        femBar.rotation.x = -Math.PI / 2;
+        femBar.visible = false;
+        fgroup.add(femBar);
+        femBarsByFloor[floor.id] = femBar;
+
         if (floor.id > 0) {
           const railH = 0.55;
           const railT = 0.03;
@@ -365,29 +407,19 @@ export function Building3DSection() {
             { len: floor.d, pos: [floor.ox - floor.w / 2, floor.oz] as [number, number], rot: -Math.PI / 2 },
           ];
           railSides.forEach((side) => {
-            const g = new THREE.Mesh(
-              new THREE.BoxGeometry(side.len - 0.3, railH, railT),
-              glassMat
-            );
+            const g = new THREE.Mesh(new THREE.BoxGeometry(side.len - 0.3, railH, railT), glassMat);
             g.position.set(side.pos[0], yCursor + SLAB_H + railH / 2 + 0.02, side.pos[1]);
             g.rotation.y = side.rot;
             fgroup.add(g);
-            const cap = new THREE.Mesh(
-              new THREE.BoxGeometry(side.len - 0.3, 0.035, 0.07),
-              frameMat
-            );
+            const cap = new THREE.Mesh(new THREE.BoxGeometry(side.len - 0.3, 0.035, 0.07), frameMat);
             cap.position.set(side.pos[0], yCursor + SLAB_H + railH + 0.02, side.pos[1]);
             cap.rotation.y = side.rot;
             fgroup.add(cap);
           });
         }
 
-        // Highlight ring (para warn/crit)
         const ringShape = roundedRect(THREE, floor.w + 0.1, floor.d + 0.1, 0.55);
-        const ringGeo = new THREE.ExtrudeGeometry(ringShape, {
-          depth: SLAB_H + 0.02,
-          bevelEnabled: false,
-        });
+        const ringGeo = new THREE.ExtrudeGeometry(ringShape, { depth: SLAB_H + 0.02, bevelEnabled: false });
         ringGeo.rotateX(-Math.PI / 2);
         const ringMat = new THREE.MeshBasicMaterial({
           color,
@@ -401,7 +433,6 @@ export function Building3DSection() {
         fgroup.add(ring);
         highlightMap[floor.id] = ring;
 
-        // Hitbox click
         const hit = new THREE.Mesh(
           new THREE.BoxGeometry(floor.w + 0.25, FLOOR_H, floor.d + 0.25),
           new THREE.MeshBasicMaterial({ visible: false })
@@ -411,16 +442,12 @@ export function Building3DSection() {
         fgroup.add(hit);
         hitboxes.push(hit);
 
-        // Jardineras solo en complex
         if (floor.complexity === "complex" && floor.id > 0) {
           const planterMat = new THREE.MeshStandardMaterial({ color: 0xe8e6de, roughness: 0.55, metalness: 0.15 });
           const leafMat = new THREE.MeshStandardMaterial({ color: 0x1e5a3a, roughness: 0.85, metalness: 0 });
           const px = floor.ox + floor.w * 0.15;
           const pz = floor.oz + floor.d / 2 - 0.25;
-          const planter = new THREE.Mesh(
-            new THREE.BoxGeometry(floor.w * 0.3, 0.16, 0.22),
-            planterMat
-          );
+          const planter = new THREE.Mesh(new THREE.BoxGeometry(floor.w * 0.3, 0.16, 0.22), planterMat);
           planter.position.set(px, yCursor + SLAB_H + 0.09, pz);
           fgroup.add(planter);
           const nLeaves = 4;
@@ -435,7 +462,6 @@ export function Building3DSection() {
         yCursor += FLOOR_H;
       });
 
-      // Suelo
       const ground = new THREE.Mesh(
         new THREE.CircleGeometry(55, 64),
         new THREE.MeshStandardMaterial({ color: 0x0a0d18, metalness: 0.15, roughness: 0.95 })
@@ -444,14 +470,12 @@ export function Building3DSection() {
       ground.position.y = -0.52;
       scene.add(ground);
 
-      // Grid
       const grid = new THREE.GridHelper(110, 55, 0x8b5cf6, 0x1e293b);
       grid.position.y = -0.5;
       (grid.material as any).opacity = 0.22;
       (grid.material as any).transparent = true;
       scene.add(grid);
 
-      // Arboles
       const treeMat = new THREE.MeshStandardMaterial({ color: 0x1a3a2a, roughness: 0.9 });
       for (let t = 0; t < 26; t++) {
         const angle = (t / 26) * Math.PI * 2 + Math.random() * 0.3;
@@ -463,7 +487,6 @@ export function Building3DSection() {
         scene.add(tree);
       }
 
-      // Piscina en atico
       const topFloor = FLOORS[FLOORS.length - 1];
       const poolMat = new THREE.MeshPhysicalMaterial({
         color: 0x06b6d4,
@@ -482,7 +505,6 @@ export function Building3DSection() {
       pool.position.set(topFloor.ox + topFloor.w * 0.2, yCursor - 0.02, topFloor.oz);
       scene.add(pool);
 
-      // Antenas cubierta
       const antennaMat = new THREE.MeshStandardMaterial({ color: 0x444448, metalness: 0.8, roughness: 0.4 });
       for (let a = 0; a < 2; a++) {
         const ant = new THREE.Mesh(
@@ -532,7 +554,7 @@ export function Building3DSection() {
       canvas.addEventListener("pointermove", onPointerMove);
       canvas.addEventListener("click", onClick);
 
-      sceneRef.current = { scene, camera, renderer, controls, highlightMap };
+      sceneRef.current = { scene, camera, renderer, controls, highlightMap, slabsByFloor, femBarsByFloor };
 
       const animate = () => {
         controls.update();
@@ -578,6 +600,28 @@ export function Building3DSection() {
     });
   }, [selected, hover]);
 
+  useEffect(() => {
+    const { slabsByFloor, femBarsByFloor } = sceneRef.current || {};
+    if (!slabsByFloor) return;
+
+    Object.values(slabsByFloor).forEach((meshList: any) => {
+      meshList.forEach((mesh: any) => {
+        if (mesh.userData.matArq && mesh.userData.matFem) {
+          mesh.material = viewMode === "fem" ? mesh.userData.matFem : mesh.userData.matArq;
+        }
+        if (mesh.userData.isAccentArq) {
+          mesh.visible = viewMode === "arq";
+        }
+      });
+    });
+
+    if (femBarsByFloor) {
+      Object.values(femBarsByFloor).forEach((bar: any) => {
+        bar.visible = viewMode === "fem";
+      });
+    }
+  }, [viewMode, ready]);
+
   return (
     <section className="relative border-b border-white/5 bg-gradient-to-b from-slate-950 via-slate-900/80 to-slate-950 py-20">
       <div className="mx-auto max-w-7xl px-6">
@@ -592,33 +636,79 @@ export function Building3DSection() {
             </span>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-slate-400">
-            Haz click en cualquier planta. Cuanto mas compleja sea su geometria (voladizos, terrazas, step-back), mas articulos del CTE, EHE-08 y NCSR-02 quedan por verificar.
+            Desde el modelo analitico de Revit al informe de cumplimiento en un clic. Alterna entre la vista arquitectonica (plantas, terrazas, voladizos) y la vista FEM (utilizacion jet colormap). Click en cualquier planta abre su informe.
           </p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
           <div
             ref={wrapRef}
-            className="relative col-span-1 h-[680px] overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 shadow-[0_0_80px_-20px_rgba(139,92,246,0.4)] lg:col-span-8"
+            className="relative col-span-1 h-[640px] overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 shadow-[0_0_80px_-20px_rgba(139,92,246,0.4)] lg:col-span-8"
           >
             <canvas ref={canvasRef} className="h-full w-full" style={{ cursor: "grab" }} />
+
             <div className="pointer-events-none absolute bottom-4 left-4 rounded-lg border border-white/10 bg-slate-950/80 px-3 py-1.5 font-mono text-[10px] text-slate-400 backdrop-blur">
-              agente-estructural v12.4 | {ready ? "FEM ready - 10 plantas" : "cargando..."}
+              agente-estructural v12.4 | {ready ? "FEM ready - 8 plantas" : "cargando..."}
             </div>
-            <div className="pointer-events-none absolute top-4 right-4 flex items-center gap-3 rounded-lg border border-white/10 bg-slate-950/80 px-3 py-1.5 text-[10px] backdrop-blur">
-              <span className="flex items-center gap-1 text-emerald-300">
-                <span className="h-2 w-2 rounded-full bg-emerald-400"></span>CUMPLE
-              </span>
-              <span className="flex items-center gap-1 text-amber-300">
-                <span className="h-2 w-2 rounded-full bg-amber-400"></span>REVISAR
-              </span>
-              <span className="flex items-center gap-1 text-red-400">
-                <span className="h-2 w-2 rounded-full bg-red-500"></span>CRITICO
-              </span>
+
+            <div className="absolute left-4 top-4 flex rounded-lg border border-white/10 bg-slate-950/85 p-0.5 backdrop-blur">
+              <button
+                onClick={() => setViewMode("arq")}
+                className={
+                  "rounded px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest transition " +
+                  (viewMode === "arq"
+                    ? "bg-violet-500/25 text-violet-200"
+                    : "text-slate-400 hover:text-white")
+                }
+              >
+                Arquitectonica
+              </button>
+              <button
+                onClick={() => setViewMode("fem")}
+                className={
+                  "rounded px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest transition " +
+                  (viewMode === "fem"
+                    ? "bg-cyan-500/25 text-cyan-200"
+                    : "text-slate-400 hover:text-white")
+                }
+              >
+                FEM
+              </button>
             </div>
+
+            {viewMode === "fem" ? (
+              <div className="pointer-events-none absolute right-4 top-4 rounded-lg border border-white/10 bg-slate-950/85 p-3 backdrop-blur">
+                <div className="mb-2 font-mono text-[9px] uppercase tracking-widest text-slate-400">Utilizacion por planta</div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className="h-28 w-3 rounded"
+                    style={{ background: "linear-gradient(to top, #0000ff, #00ffff, #00ff00, #ffff00, #ff0000)" }}
+                  />
+                  <div className="flex h-28 flex-col justify-between font-mono text-[9px] text-slate-300">
+                    <span>&gt;82%</span>
+                    <span>66%</span>
+                    <span>50%</span>
+                    <span>33%</span>
+                    <span>&lt;15%</span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="pointer-events-none absolute top-4 right-4 flex items-center gap-3 rounded-lg border border-white/10 bg-slate-950/80 px-3 py-1.5 text-[10px] backdrop-blur">
+                <span className="flex items-center gap-1 text-emerald-300">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400"></span>CUMPLE
+                </span>
+                <span className="flex items-center gap-1 text-amber-300">
+                  <span className="h-2 w-2 rounded-full bg-amber-400"></span>REVISAR
+                </span>
+                <span className="flex items-center gap-1 text-red-400">
+                  <span className="h-2 w-2 rounded-full bg-red-500"></span>CRITICO
+                </span>
+              </div>
+            )}
           </div>
 
-          <div className="col-span-1 flex h-[680px] flex-col rounded-2xl border border-white/10 bg-slate-950/60 lg:col-span-4">
+          <div className="col-span-1 flex h-[640px] flex-col rounded-2xl border border-white/10 bg-slate-950/60 lg:col-span-4">
             {selected ? (
               <FloorPanel floor={selected} onClose={() => setSelected(null)} />
             ) : (

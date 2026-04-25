@@ -540,7 +540,7 @@ export function StructuralFEMSection() {
             </span>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-slate-400">
-            Modelo de calculo estilo SAP2000. Haz click en cualquier <b className="text-white">pilar</b>, <b className="text-white">viga</b> o <b className="text-white">forjado</b> para ver su tension, utilizacion y cumplimiento normativo.
+            Modelo de calculo trazable hasta el pilar. Colormap jet identico al output de SAP2000 y ETABS. Click en cualquier <b className="text-white">pilar</b>, <b className="text-white">viga</b> o <b className="text-white">forjado</b> para ver utilizacion, dimensiones, material y mapeo a los articulos EHE-08 (Art. 42, 44, 46, 50). Toggle deformada x1500 para revisar modo de fallo.
           </p>
         </div>
 
