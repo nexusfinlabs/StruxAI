@@ -1,6 +1,6 @@
 import { CapabilitiesSection } from "@/components/landing/CapabilitiesSection";
-// import { Building3DSection } from "@/components/landing/Building3DSection";  // movido a /casos-de-uso
-// import { TimberBuildingSection } from "@/components/landing/TimberBuildingSection";  // movido a /casos-de-uso
+import { Building3DSection } from "@/components/landing/Building3DSection";
+import { TimberBuildingSection } from "@/components/landing/TimberBuildingSection";
 import { StructuralFEMSection } from "@/components/landing/StructuralFEMSection";
 import { DashboardCta } from "@/components/landing/DashboardCta";
 import { Footer } from "@/components/landing/Footer";
@@ -20,9 +20,9 @@ export default function Home() {
       <Navbar />
       <main>
         <HeroSection />
-        {/* <Building3DSection /> movido a /casos-de-uso */}
+        <Building3DSection />
         <StructuralFEMSection />
-        {/* <TimberBuildingSection /> movido a /casos-de-uso */}
+        <TimberBuildingSection />
         <TrustBar />
         <ValueGrid />
         <ProcessTimeline />
