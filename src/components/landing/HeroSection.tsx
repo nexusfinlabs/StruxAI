@@ -196,7 +196,7 @@ export function HeroSection() {
             >
               {t("hero.ctaHow")}
             </a>
-            
+            <a
               href={i18n.language === "en" ? "/normativa/STRUXAI_regulations_EN.pdf" : "/normativa/STRUXAI_normativa_ES.pdf"}
               download
               target="_blank"
