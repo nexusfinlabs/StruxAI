@@ -2,7 +2,6 @@ import { CapabilitiesSection } from "@/components/landing/CapabilitiesSection";
 // import { Building3DSection } from "@/components/landing/Building3DSection";  // movido a /casos-de-uso
 // import { TimberBuildingSection } from "@/components/landing/TimberBuildingSection";  // movido a /casos-de-uso
 import { StructuralFEMSection } from "@/components/landing/StructuralFEMSection";
-import { DashboardCta } from "@/components/landing/DashboardCta";
 import { Footer } from "@/components/landing/Footer";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { Navbar } from "@/components/landing/Navbar";
@@ -11,7 +10,6 @@ import { ProductShowcase } from "@/components/landing/ProductShowcase";
 import { StatsBar } from "@/components/landing/StatsBar";
 import { TrustBar } from "@/components/landing/TrustBar";
 import { UseCasesSection } from "@/components/landing/UseCasesSection";
-import { ValueGrid } from "@/components/landing/ValueGrid";
 
 export default function Home() {
   return (
