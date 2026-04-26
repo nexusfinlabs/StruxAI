@@ -9,7 +9,8 @@
     "login": "Log in",
     "requestDemo": "Request demo",
     "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "regulations": "Regulations"
   },
   "controls": {
     "themeLight": "Light theme",

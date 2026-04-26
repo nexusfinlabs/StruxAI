@@ -9,7 +9,8 @@
     "login": "Iniciar sesión",
     "requestDemo": "Solicitar demo",
     "openMenu": "Abrir menú",
-    "closeMenu": "Cerrar menú"
+    "closeMenu": "Cerrar menú",
+    "regulations": "Normativa"
   },
   "controls": {
     "themeLight": "Tema claro",
