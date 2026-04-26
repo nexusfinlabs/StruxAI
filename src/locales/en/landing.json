@@ -24,13 +24,13 @@
   "hero": {
     "badgeNew": "New",
     "badgeLine": "AI applied to structural analysis from Revit → FEM",
-    "titleBefore": "Structural analysis",
-    "titleFast": "faster",
-    "titleMid": ".",
-    "titleReliable": "More reliable",
-    "titleAfter": ".",
-    "subtitle": "Automate validations, generate the analytical model, run the analysis, and return traceable results to your BIM workflow.",
-    "ctaDemo": "View demo →",
+    "titleBefore": "Structural Engineering in",
+    "titleFast": "Copilot Mode",
+    "titleMid": "",
+    "titleReliable": "",
+    "titleAfter": "",
+    "subtitle": "Our AI platform automates validations and model reviews, launches structural calculation pipelines, and returns traceable results into your BIM workflow in minutes.",
+    "ctaDemo": "Request a demo",
     "ctaHow": "How it works",
     "pill1": "Integrated with Revit API & Dynamo",
     "pill2": "FEM engines: Robot · ETABS · OpenSees",
@@ -54,7 +54,7 @@
   },
   "value": {
     "eyebrow": "Everything you need",
-    "title": "One platform. The full workflow.",
+    "title": "Built for teams that actually calculate",
     "subtitle": "From the BIM model to the final report—with automation, control, and traceability.",
     "features": [
       {
@@ -187,7 +187,7 @@
     "completed": "Completed"
   },
   "cases": {
-    "title": "Built for real structures—not pretty demos",
+    "title": "Designed for everyday and non-standard structures",
     "subtitle": "Use cases where automation and technical control make a difference on every delivery.",
     "items": [
       {
@@ -225,7 +225,7 @@
       "Results"
     ],
     "eyebrow": "For engineers building the future",
-    "title": "Less manual work. Better decisions.",
+    "title": "Less manual work. Save up to 60 percent of your time",
     "body": "STRUXAI is the copilot your structural team needed: it unifies model, analysis, and reports without losing technical rigor.",
     "demo": "Request demo →",
     "specialist": "Talk to a specialist",

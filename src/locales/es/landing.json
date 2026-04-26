@@ -24,13 +24,13 @@
   "hero": {
     "badgeNew": "Nuevo",
     "badgeLine": "IA aplicada al cálculo estructural en Revit → FEM",
-    "titleBefore": "Cálculo estructural",
-    "titleFast": "más rápido",
-    "titleMid": ".",
-    "titleReliable": "Más fiable",
-    "titleAfter": ".",
-    "subtitle": "Automatiza validaciones, genera el modelo analítico, lanza el cálculo y devuelve resultados trazables a tu flujo BIM.",
-    "ctaDemo": "Ver demo →",
+    "titleBefore": "Calculo Estructural en",
+    "titleFast": "Modo Copilot",
+    "titleMid": "",
+    "titleReliable": "",
+    "titleAfter": "",
+    "subtitle": "Nuestra plataforma de IA automatiza validaciones, revisiones de modelos, lanza pipelines de calculo estructural y devuelve resultados trazables a tu flujo BIM en cuestion de minutos.",
+    "ctaDemo": "Solicitar demo",
     "ctaHow": "Cómo funciona",
     "pill1": "Integrado con Revit API y Dynamo",
     "pill2": "Motores FEM Robot · ETABS · OpenSees",
@@ -54,7 +54,7 @@
   },
   "value": {
     "eyebrow": "Todo lo que necesitas",
-    "title": "Una plataforma. Todo el flujo.",
+    "title": "Disenado para equipos que calculan de verdad",
     "subtitle": "Desde el modelo BIM hasta el informe final, con automatización, control y trazabilidad.",
     "features": [
       {
@@ -187,7 +187,7 @@
     "completed": "Completado"
   },
   "cases": {
-    "title": "Pensado para estructuras reales, no para demos bonitas",
+    "title": "Pensado para edificacion y estructuras no estandar",
     "subtitle": "Casos de uso donde la automatización y el control técnico marcan la diferencia en cada entrega.",
     "items": [
       {
@@ -225,7 +225,7 @@
       "Resultados"
     ],
     "eyebrow": "Para ingenieros que construyen el futuro",
-    "title": "Menos trabajo manual. Mejores decisiones.",
+    "title": "Menos trabajo manual. Ahorra hasta un 60% de tu tiempo",
     "body": "STRUXAI es el copiloto que tu equipo estructural necesitaba: unifica modelo, cálculo e informes sin perder el rigor técnico.",
     "demo": "Solicitar demo →",
     "specialist": "Hablar con un especialista",
