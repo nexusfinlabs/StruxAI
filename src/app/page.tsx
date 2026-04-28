@@ -1,4 +1,4 @@
-import { CapabilitiesSection } from "@/components/landing/CapabilitiesSection";
+// import { CapabilitiesSection } from "@/components/landing/CapabilitiesSection";  // eliminado del home
 // import { Building3DSection } from "@/components/landing/Building3DSection";  // movido a /casos-de-uso
 // import { TimberBuildingSection } from "@/components/landing/TimberBuildingSection";  // movido a /casos-de-uso
 import { StructuralFEMSection } from "@/components/landing/StructuralFEMSection";
@@ -23,7 +23,6 @@ export default function Home() {
         <TrustBar />
 <ProcessTimeline />
         <StatsBar />
-        <CapabilitiesSection />
         <ProductShowcase />
         <UseCasesSection />
 </main>

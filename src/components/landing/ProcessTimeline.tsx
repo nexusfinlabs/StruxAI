@@ -65,52 +65,31 @@ const BIM_STEPS: Step[] = [
     color: "violet",
   },
   {
-    id: 2,
-    code: "03",
-    title: "Modelo FEM",
-    desc: "Conversion tecnica a nodos, barras, apoyos, cargas y combinaciones de calculo.",
-    metric: { value: "6.842", label: "nodos generados" },
-    detail: {
-      kpis: [
-        { label: "Nodos", value: "6.842" },
-        { label: "Barras", value: "4.582" },
-        { label: "Apoyos", value: "78" },
-        { label: "Combinaciones", value: "42" },
-      ],
-      messages: [
-        "Generando malla FEM...",
-        "Mapeando cargas a nodos...",
-        "42 combinaciones preparadas (G+Q+W+S).",
-        "Modelo listo para enviar a solver.",
-      ],
-    },
-    color: "amber",
-  },
-  {
     id: 3,
-    code: "04",
-    title: "Calculo y Diseño",
-    desc: "Ejecucion en motor profesional: SAP2000, ETABS, CYPE/CYPECAD, Robot, OpenSees.",
+    code: "03",
+    title: "Cálculo FEM y Revisión Final",
+    desc: "Generación del modelo FEM (nodos, barras, apoyos, cargas) y ejecución en motor profesional: SAP2000, ETABS, CYPE/CYPECAD, Robot, OpenSees.",
     metric: { value: "02:18:34", label: "tiempo solver" },
     detail: {
       kpis: [
+        { label: "Nodos", value: "6.842" },
         { label: "Solver", value: "SAP2000" },
-        { label: "Iteraciones", value: "8" },
         { label: "Convergencia", value: "OK" },
-        { label: "Verificacion", value: "EHE-08" },
+        { label: "Verificación", value: "EHE-08" },
       ],
       messages: [
+        "Generando malla FEM y mapeando cargas a nodos...",
+        "42 combinaciones preparadas (G+Q+W+S).",
         "Enviando modelo a SAP2000 / ETABS / CYPECAD...",
-        "Analisis estatico lineal completado.",
-        "Analisis modal espectral NCSR-02 OK.",
-        "Verificando ELU: flexion, cortante, pandeo.",
+        "Análisis estático lineal y modal espectral NCSR-02 OK.",
+        "Verificando ELU: flexión, cortante, pandeo.",
       ],
     },
     color: "emerald",
   },
   {
     id: 4,
-    code: "05",
+    code: "04",
     title: "Resultados en BIM",
     desc: "Esfuerzos, deformadas y ratios devueltos al BIM. Descarga .DXF y Memoria Tecnica en PDF.",
     metric: { value: "DXF + PDF", label: "entregables firmados" },
@@ -178,52 +157,31 @@ const CAD_STEPS: Step[] = [
     color: "violet",
   },
   {
-    id: 2,
-    code: "03",
-    title: "Modelo FEM",
-    desc: "Generacion del modelo FEM 3D a partir de los elementos detectados en el CAD 2D.",
-    metric: { value: "4.120", label: "nodos generados" },
-    detail: {
-      kpis: [
-        { label: "Nodos", value: "4.120" },
-        { label: "Barras", value: "1.248" },
-        { label: "Apoyos", value: "84" },
-        { label: "Combinaciones", value: "42" },
-      ],
-      messages: [
-        "Reconstruyendo malla 3D desde planos...",
-        "Asignando secciones y materiales por defecto...",
-        "Mapeando cargas reglamentarias...",
-        "Modelo listo para enviar a solver.",
-      ],
-    },
-    color: "amber",
-  },
-  {
     id: 3,
-    code: "04",
-    title: "Calculo y Diseño",
-    desc: "Ejecucion en motor profesional: SAP2000, ETABS, CYPE/CYPECAD, Robot, OpenSees.",
+    code: "03",
+    title: "Cálculo FEM y Revisión Final",
+    desc: "Generación del modelo FEM 3D desde los planos 2D y ejecución en motor profesional: SAP2000, ETABS, CYPE/CYPECAD, Robot, OpenSees.",
     metric: { value: "01:42:15", label: "tiempo solver" },
     detail: {
       kpis: [
+        { label: "Nodos", value: "4.120" },
         { label: "Solver", value: "CYPECAD" },
-        { label: "Iteraciones", value: "6" },
         { label: "Convergencia", value: "OK" },
-        { label: "Verificacion", value: "EHE-08" },
+        { label: "Verificación", value: "EHE-08" },
       ],
       messages: [
+        "Reconstruyendo malla 3D desde planos y asignando secciones...",
+        "Mapeando cargas reglamentarias a nodos...",
         "Enviando modelo a SAP2000 / ETABS / CYPECAD...",
-        "Analisis estatico lineal completado.",
-        "Analisis modal espectral NCSR-02 OK.",
-        "Verificando ELU: flexion, cortante, pandeo.",
+        "Análisis estático lineal y modal espectral NCSR-02 OK.",
+        "Verificando ELU: flexión, cortante, pandeo.",
       ],
     },
     color: "emerald",
   },
   {
     id: 4,
-    code: "05",
+    code: "04",
     title: "Resultados",
     desc: "Esfuerzos, deformadas y ratios listos. Descarga .DXF actualizado y Memoria Tecnica en PDF.",
     metric: { value: "DXF + PDF", label: "entregables firmados" },
@@ -384,7 +342,7 @@ function WorkflowIcon({ kind }: { kind: Workflow }) {
   );
 }
 
-const STEP_DURATION_MS = 3500;
+const STEP_DURATION_MS = 7000;
 const TICK_MS = 50;
 
 export function ProcessTimeline() {
@@ -408,7 +366,7 @@ export function ProcessTimeline() {
       if (elapsed >= STEP_DURATION_MS) {
         elapsed = 0;
         setProgress(0);
-        setCurrentStep((prev) => (prev + 1) % 5);
+        setCurrentStep((prev) => (prev + 1) % 4);
       }
     }, TICK_MS);
     return () => clearInterval(timer);
@@ -440,14 +398,14 @@ export function ProcessTimeline() {
               <>
                 De BIM a resultados{" "}
                 <span className="bg-gradient-to-r from-violet-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                  en 5 pasos
+                  en 4 pasos
                 </span>
               </>
             ) : (
               <>
                 De CAD a resultados{" "}
                 <span className="bg-gradient-to-r from-amber-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                  en 5 pasos
+                  en 4 pasos
                 </span>
               </>
             )}
@@ -494,7 +452,7 @@ export function ProcessTimeline() {
           <div className="mb-2 flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-slate-500">
             <span>Pipeline progress</span>
             <span className={curC.text}>
-              Paso {String(currentStep + 1).padStart(2, "0")} / 05
+              Paso {String(currentStep + 1).padStart(2, "0")} / 04
             </span>
           </div>
           <div className="relative h-1.5 overflow-hidden rounded-full bg-white/5">
@@ -509,7 +467,7 @@ export function ProcessTimeline() {
           </div>
         </div>
 
-        <div className="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
+        <div className="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-3">
           {STEPS.map((step, i) => {
             const c = COLORS[step.color];
             const isActive = i === currentStep;
