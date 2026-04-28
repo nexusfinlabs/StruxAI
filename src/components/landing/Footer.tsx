@@ -68,10 +68,10 @@ export function Footer() {
               {t("footer.loginNote")}
             </span>
             <a
-              href="mailto:palacio.laura@gmail.com"
+              href="mailto:hola@nexusfinlabs.com?cc=palacio.laura@gmail.com"
               className="text-slate-600 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
             >
-              palacio.laura@gmail.com
+              hola@nexusfinlabs.com
             </a>
             <a
               href="https://nexusfinlabs.com"

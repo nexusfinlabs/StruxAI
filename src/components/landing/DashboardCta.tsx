@@ -7,8 +7,8 @@ export function DashboardCta() {
   const sidebar = t("dashboardCta.sidebar", {
     returnObjects: true,
   }) as string[];
-  const mailDemo = `mailto:palacio.laura@gmail.com?subject=${encodeURIComponent(t("mailto.demoSubject"))}`;
-  const mailContact = `mailto:palacio.laura@gmail.com?subject=${encodeURIComponent(t("mailto.contactSubject"))}`;
+  const mailDemo = `mailto:hola@nexusfinlabs.com?cc=palacio.laura@gmail.com&subject=${encodeURIComponent(t("mailto.demoSubject"))}`;
+  const mailContact = `mailto:hola@nexusfinlabs.com?cc=palacio.laura@gmail.com&subject=${encodeURIComponent(t("mailto.contactSubject"))}`;
 
   return (
     <section className="border-t border-slate-200/80 py-20 dark:border-white/5 sm:py-24">

@@ -820,7 +820,7 @@ function SustainPanel({ element, onClose }: { element: SustainElement; onClose: 
 
       <div className="border-t border-white/10 p-4">
         <a
-          href={"mailto:palacio.laura@gmail.com?subject=STRUXAI%20sostenibilidad%20-%20" + encodeURIComponent(element.name)}
+          href={"mailto:hola@nexusfinlabs.com?cc=palacio.laura@gmail.com&subject=STRUXAI%20sostenibilidad%20-%20" + encodeURIComponent(element.name)}
           className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-emerald-600 to-amber-600 px-4 py-2.5 text-xs font-semibold text-white hover:from-emerald-500 hover:to-amber-500"
         >
           Consultar sobre este sistema

@@ -132,8 +132,8 @@ function BuildingVisual({
 export function HeroSection() {
   const { t, i18n } = useTranslation("landing");
   const [proyectoOpen, setProyectoOpen] = useState(false);
-  const mailDemo = `mailto:palacio.laura@gmail.com?subject=${encodeURIComponent(t("mailto.demoSubject"))}`;
-  const mailReport = `mailto:palacio.laura@gmail.com?subject=${encodeURIComponent(t("mailto.reportSubject"))}`;
+  const mailDemo = `mailto:hola@nexusfinlabs.com?cc=palacio.laura@gmail.com&subject=${encodeURIComponent(t("mailto.demoSubject"))}`;
+  const mailReport = `mailto:hola@nexusfinlabs.com?cc=palacio.laura@gmail.com&subject=${encodeURIComponent(t("mailto.reportSubject"))}`;
 
   const copilot = {
     brand: t("copilot.brand"),

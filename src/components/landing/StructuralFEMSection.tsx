@@ -735,7 +735,7 @@ function ElementPanel({ element, onClose }: { element: StructElement; onClose: (
 
       <div className="border-t border-white/10 p-4">
         <a
-          href={"mailto:palacio.laura@gmail.com?subject=STRUXAI%20-%20Revisar%20" + encodeURIComponent(element.name)}
+          href={"mailto:hola@nexusfinlabs.com?cc=palacio.laura@gmail.com&subject=STRUXAI%20-%20Revisar%20" + encodeURIComponent(element.name)}
           className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 px-4 py-2.5 text-xs font-semibold text-white hover:from-cyan-500 hover:to-blue-500"
         >
           Pedir revision de este elemento
